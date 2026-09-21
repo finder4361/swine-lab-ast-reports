@@ -1,0 +1,1 @@
+window.ASSETS={templates:{},stamps:{},notes:[]};

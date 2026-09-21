@@ -1,0 +1,6 @@
+*.xlsx
+*.docx
+*.json
+*.zip
+.env*
+node_modules/
