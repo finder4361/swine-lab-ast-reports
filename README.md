@@ -1,18 +1,20 @@
 # 豬病檢驗藥敏報告
 
-公開靜態網站。病例、報告範本及獸醫師印章由使用者在瀏覽器中匯入，不附帶於此儲存庫。
+部署於 GitHub Pages，瀏覽器使用 Google Identity Services 及 Google Sheets API 直接讀取「115下半年度豬病表單」。不使用 Apps Script、不需要 Excel 匯入。
 
 ## 使用
-1. 從檢驗 Google 試算表下載 Microsoft Excel (.xlsx)。
-2. 網站選擇「更新資料（匯入 Excel）」。
-3. 選擇「匯入報告範本與印章設定（JSON）」，載入內部保管的設定檔。
-4. 輸入完整免疫室編號，選擇菌株，核對輪值獸醫師或手動選章後下载報告。
+1. 點選「連線 Google 試算表」，使用具有來源表單存取權的 Google 帳號授予唯讀權限。
+2. 輸入完整免疫室編號。每次查詢都讀取三份工作表最新資料。
+3. 產生報告前匯入本機保管的範本與印章 JSON，選擇菌株、核對結果與輪值獸醫師。
 
-匯入檔案只留在本次頁面記憶體，重新整理需重新匯入。沒有資料上傳、分析追蹤或遠端查詢。
-報告預設使用細菌分離紀錄 N 欄輪值獸醫師；缺章顯示待補章；Cefquinome 不列入報告。
-PDF 為瀏覽器列印版，Word 使用匯入的原始範本。
+OAuth access token 僅保存在當次頁面記憶體，不写入 localStorage、網址或儲存庫。病例與印章不內建於公開程式碼。中斷連線會清除查詢結果，連線過期需重新授權。
+
+## 一次性 Google 設定
+在 Google Cloud 專案啟用 Google Sheets API，建立 Web application OAuth client。Authorized JavaScript origin 設為 `https://finder4361.github.io`，Client ID 填入 `google-config.js`。前端不得放 Client Secret 或服務帳戶私鑰。
+OAuth scope 僅請求 `https://www.googleapis.com/auth/spreadsheets.readonly`。測試模式需將使用者加入 OAuth test users。
 
 ## 部署
 GitHub Settings → Pages → Deploy from a branch → main → /(root)。無須編譯。
-請勿將私人設定檔、檢验資料或原本內嵌資料的 assets.js/data.js 上傳至此公開儲存庫。
-JSZip 保留其檔頭授權。
+
+報告使用細菌分離紀錄 N 欄輪值獸醫師，可依姓名改選印章。缺章標示待補章，Cefquinome 不列入報告。Word 使用匯入原始範本；PDF 為瀏覽器列印版。
+JSZip 保留檔頭授權。
