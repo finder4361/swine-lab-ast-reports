@@ -17,4 +17,5 @@ OAuth scope 僅請求 `https://www.googleapis.com/auth/spreadsheets.readonly`。
 GitHub Settings → Pages → Deploy from a branch → main → /(root)。無須編譯。
 
 報告「收件人」取自藥敏紀錄表 J 欄，「檢驗人員」印章取自細菌分離紀錄 N 欄輪值獸醫師，可依姓名改選；右欄為林章豪副教授印章。缺章標示待補章，Cefquinome 不列入報告。Word 使用匯入原始範本；PDF 列印版參照提供的細菌藥敏報告，呈現基本資料、必要時的毒力基因、藥物判讀、雙簽章與說明。
+Word 下載檔名及 PDF 列印標題共用命名格式：`送檢日期YYYY.MM.DD 送檢單位(畜主) 免疫室編號 菌名 藥物敏感性試驗`。送檢日期取自藥敏紀錄，不使用報告完成日期；來源日期格式無法辨識時停止產生檔案。
 JSZip 保留檔頭授權。
