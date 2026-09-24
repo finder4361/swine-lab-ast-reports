@@ -34,26 +34,3 @@ $('pdf').addEventListener('click',()=>{try{let m=model(),html=LabReport.printHtm
 showSource();
 
 for(const id of ['site-text','report-date'])$(id).addEventListener('input',()=>{$('confirmed').checked=false;enable();});
-
-$('assets-file').addEventListener('change',async ev=>{
- const file=ev.target.files[0];if(!file)return;
- try{
-  if(file.size>12*1024*1024)throw Error('設定檔超過 12 MB。');
-  const raw=JSON.parse(await file.text());
-  if(!raw.templates||!raw.stamps||!Array.isArray(raw.notes))throw Error('設定格式不正確。');
-  for(const kind of ['positive','negative']){
-   if(typeof raw.templates[kind]!=='string'||!/^UEs[A-Za-z0-9+/=]+$/.test(raw.templates[kind]))throw Error('缺少有效的 Word 範本。');
-   const zip=await JSZip.loadAsync(raw.templates[kind],{base64:true});if(!zip.file('word/document.xml'))throw Error('Word 範本不完整。');
-  }
-  const stamps=Object.create(null);
-  for(const [name,stamp] of Object.entries(raw.stamps)){
-   if(!name.trim()||!['png','jpeg','jpg'].includes(stamp.ext)||typeof stamp.data!=='string'||!/^[A-Za-z0-9+/=]+$/.test(stamp.data)||!Number.isFinite(stamp.width)||!Number.isFinite(stamp.height)||stamp.width<=0||stamp.height<=0)throw Error('印章格式不正確。');
-   stamps[name]={data:stamp.data,ext:stamp.ext,width:stamp.width,height:stamp.height};
-  }
-  if(!raw.notes.every(n=>typeof n==='string'))throw Error('報告說明格式不正確。');
-  window.ASSETS={templates:{positive:raw.templates.positive,negative:raw.templates.negative},stamps,notes:raw.notes};
-  $('assets-status').textContent='已匯入兩份範本與 '+Object.keys(stamps).length+' 位印章。';
-  if(selected){selectDutyVet();refresh();}
- }catch(err){$('assets-status').textContent='匯入失敗：'+err.message;}
- ev.target.value='';
-});

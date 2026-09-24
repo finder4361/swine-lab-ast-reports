@@ -5,9 +5,9 @@
 ## 使用
 1. 點選「連線 Google 試算表」，使用具有來源表單存取權的 Google 帳號授予唯讀權限。
 2. 輸入完整免疫室編號。每次查詢都讀取三份檢驗紀錄與「縮寫對照表及分生判讀標準」最新資料。
-3. 產生報告前匯入本機保管的範本與印章 JSON，選擇菌株、核對結果與輪值獸醫師。分離部位有精確縮寫對應時自動轉成中文；未對應時保留原值並提示人工確認。
+3. 選擇菌株、核對結果與輪值獸醫師後直接產生報告。兩份 Word 範本與印章已內建；分離部位有精確縮寫對應時自動轉成中文，未對應時保留原值並提示人工確認。
 
-OAuth access token 僅保存在當次頁面記憶體，不写入 localStorage、網址或儲存庫。病例與印章不內建於公開程式碼。中斷連線會清除查詢結果，連線過期需重新授權。
+OAuth access token 僅保存在當次頁面記憶體，不寫入 localStorage 或網址。病例資料不內建於公開程式碼；報告範本與印章依使用者決定直接置於公開儲存庫。中斷連線會清除查詢結果，連線過期需重新授權。
 
 ## 一次性 Google 設定
 在 Google Cloud 專案啟用 Google Sheets API，建立 Web application OAuth client。Authorized JavaScript origin 設為 `https://finder4361.github.io`，Client ID 填入 `google-config.js`。前端不得放 Client Secret 或服務帳戶私鑰。
