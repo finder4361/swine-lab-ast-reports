@@ -23,10 +23,11 @@
   });
  }
  function validate(valueRanges){
-  if(!Array.isArray(valueRanges)||valueRanges.length!==3)throw Error('Google 回傳的工作表不完整。');
-  const data={};['isolation','pcr','ast'].forEach((k,i)=>data[k]=valueRanges[i].values||[]);
+  if(!Array.isArray(valueRanges)||valueRanges.length!==4)throw Error('Google 回傳的工作表不完整。');
+  const data={};['isolation','pcr','ast','sites'].forEach((k,i)=>data[k]=valueRanges[i].values||[]);
   const C=root.LabCore;
   if(C.norm(data.isolation[0]?.[1])!=='免疫室編號'||C.norm(data.ast[0]?.[1])!=='免疫室編號')throw Error('來源欄位已變更，請先更新欄位對應。');
+  if(C.clean(data.sites[1]?.[0])!=='檢體縮寫'||C.clean(data.sites[1]?.[2])!=='內容')throw Error('縮寫對照表欄位已變更，請先更新欄位對應。');
   for(const d of C.drugs)if(C.norm(data.ast[1]?.[d[3]])!==d[0])throw Error('藥物欄位已變更：'+d[0]+'，已停止讀取以免填錯。');
   return data;
  }
@@ -35,7 +36,7 @@
   if(!connected()){disconnect();throw Error('請先點選「連線 Google 試算表」；連線過期時需重新登入。');}
   const active=session;
   const q=new URLSearchParams({valueRenderOption:'FORMATTED_VALUE',majorDimension:'ROWS'});
-  for(const r of ["'細菌分離紀錄表'!A:AE","'細菌Colony PCR'!A:AI","'藥敏結果紀錄表'!A:BB"])q.append('ranges',r);
+  for(const r of ["'細菌分離紀錄表'!A:AE","'細菌Colony PCR'!A:AI","'藥敏結果紀錄表'!A:BB","'縮寫對照表及分生判讀標準'!I:K"])q.append('ranges',r);
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),30000);
   try{
    const response=await fetch('https://sheets.googleapis.com/v4/spreadsheets/'+spreadsheetId+'/values:batchGet?'+q,{headers:{Authorization:'Bearer '+token},cache:'no-store',signal:controller.signal});
